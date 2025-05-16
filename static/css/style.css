@@ -1,0 +1,173 @@
+.game-state {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.game-state.not-started {
+    background-color: #f0f0f0;
+    color: #666;
+}
+
+.game-state.active {
+    background-color: #e6ffe6;
+    color: #2e7d32;
+}
+
+.game-state.paused {
+    background-color: #fff3e0;
+    color: #e65100;
+}
+
+.game-state.finished {
+    background-color: #f3e5f5;
+    color: #6a1b9a;
+}
+
+.game-state.corrupted {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+.game-info {
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+}
+
+.winner {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.winner.blue {
+    color: #1976d2;
+}
+
+.winner.red {
+    color: #d32f2f;
+}
+
+.game-end-reason {
+    color: #666;
+    font-style: italic;
+}
+
+/* Button states */
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+button:not(:disabled) {
+    cursor: pointer;
+}
+
+.game-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-radius: 4px;
+}
+
+.player-info {
+    display: flex;
+    gap: 20px;
+}
+
+.player {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.player-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #333;
+}
+
+.blue-player .player-color {
+    background-color: #1976d2;
+}
+
+.red-player .player-color {
+    background-color: #d32f2f;
+}
+
+.player-name {
+    color: #333;
+}
+
+.game-state-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.game-state {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.state-label {
+    font-weight: bold;
+    color: #333;
+}
+
+.state-value {
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    background-color: #e0e0e0;
+}
+
+.game-message {
+    color: #666;
+    font-style: italic;
+    padding: 0.5rem;
+    background-color: #fff;
+    border-radius: 4px;
+    border-left: 3px solid #4CAF50;
+}
+
+.game-state-panel .state-value.not-started {
+    background-color: #e0e0e0;
+    color: #666;
+}
+
+.game-state-panel .state-value.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.game-state-panel .state-value.paused {
+    background-color: #FFC107;
+    color: #333;
+}
+
+.game-state-panel .state-value.finished {
+    background-color: #2196F3;
+    color: white;
+}
+
+.game-state-panel .state-value.corrupted {
+    background-color: #F44336;
+    color: white;
+} 

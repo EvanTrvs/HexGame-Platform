@@ -1,0 +1,20 @@
+<header>
+    <div class="header-content">
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='visuals/icoHexGame.png') }}" alt="Hex Game Logo" class="logo">
+            <h1 class="project-title">Projet jeu de Hex</h1>
+        </div>
+        <div class="authors">
+            <p>Réalisé par :</p>
+            <p>Henri Salard (salh2167)</p>
+            <p>Evan Tortevois (tore8776)</p>
+        </div>
+        <nav class="navigation">
+            <ul>
+                <li><a href="{{ url_for('home') }}">Accueil</a></li>
+                <li><a href="{{ url_for('game.game_page') }}">Nouvelle Partie</a></li>
+                <li><a href="{{ url_for('games_list.list_games') }}">Gestionnaire de Parties</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>

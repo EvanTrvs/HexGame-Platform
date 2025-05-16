@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hex Game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/game.css') }}">
+</head>
+<body>
+    {% include 'partials/header.html' %}
+
+    <div class="game-container">
+        <div class="game-header">
+            <div class="game-controls">
+                <button id="start-game">Start Game</button>
+                <button id="pause-game">Pause</button>
+                <button id="resume-game">Resume</button>
+                <button id="resign-game">Resign</button>
+                <button id="save-game">Save Game</button>
+                <div class="replay-controls">
+                    <button id="prev-move" class="replay-button">←</button>
+                    <button id="next-move" class="replay-button">→</button>
+                </div>
+            </div>
+            
+            <div class="game-info-panel">
+                <div class="game-state-panel">
+                    <div class="game-state">
+                        <span class="state-label">Game State:</span>
+                        <span id="game-state" class="state-value">-</span>
+                    </div>
+                    <div class="game-message" id="game-message"></div>
+                </div>
+                
+                <div class="player-info">
+                    <div class="player blue-player">
+                        <span class="player-color">🔵</span>
+                        <span class="player-name">Blue Player</span>
+                        <span class="player-status">(Waiting)</span>
+                    </div>
+                    <div class="player red-player">
+                        <span class="player-color">🔴</span>
+                        <span class="player-name">Red Player</span>
+                        <span class="player-status">(Waiting)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hex-board-container">
+            <div class="left-border"></div>
+            <div class="right-border"></div>
+            <div id="hex-board"></div>
+        </div>
+    </div>
+
+    <!-- Board Size Selection Modal -->
+    <div id="board-size-modal" class="modal">
+        <div class="modal-content">
+            <h2>Sélectionner la taille du plateau</h2>
+            <div class="form-group">
+                <label for="board-size">Taille du plateau (impair, 5-23):</label>
+                <select id="board-size" class="form-control">
+                    <option value="5">5x5</option>
+                    <option value="7">7x7</option>
+                    <option value="9">9x9</option>
+                    <option value="11">11x11</option>
+                    <option value="13">13x13</option>
+                    <option value="15">15x15</option>
+                    <option value="17">17x17</option>
+                    <option value="19">19x19</option>
+                    <option value="21">21x21</option>
+                    <option value="23">23x23</option>
+                </select>
+            </div>
+            <div class="modal-buttons">
+                <button id="confirm-board-size" class="button">Confirmer</button>
+                <button id="cancel-board-size" class="button">Annuler</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Save Game Modal -->
+    <div id="save-modal" class="modal">
+        <div class="modal-content">
+            <h2>Save Game</h2>
+            <form id="save-game-form">
+                <div class="form-group">
+                    <label for="blue-player-name">Blue Player Name:</label>
+                    <input type="text" id="blue-player-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="red-player-name">Red Player Name:</label>
+                    <input type="text" id="red-player-name" required>
+                </div>
+                <div class="modal-buttons">
+                    <button type="submit" class="save-button">Save</button>
+                    <button type="button" class="cancel-button">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% include 'partials/footer.html' %}
+
+    <script src="{{ url_for('static', filename='js/hex-board.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/game-controller.js') }}"></script>
+</body>
+</html> 

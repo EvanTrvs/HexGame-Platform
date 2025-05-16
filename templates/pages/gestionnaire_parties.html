@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Parties</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+<div class="content">
+    {% include 'partials/header.html' %}
+    <h1>Liste des Parties Enregistrées</h1>
+    <div class="button-container">
+        <input type="file" id="file-input" name="file" accept=".hex,.sgf, .hsgf, .json, .sqlite">
+        <!--<button onclick="selectFile('play_hex')">Lire Fichier Play Hex</button>-->
+        <button onclick="selectFile('sgf')">Lire Fichier SGF</button>
+        <button onclick="viewStatistics()">Voir Statistiques</button>
+        <button onclick="deleteSelectedGames()">Supprimer</button>
+        <button onclick="showModal()">Sauvegarder partie SGF</button>
+
+    </div>
+    <table id="games-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Date</th>
+                <th>Joueur bleu</th>
+                <th>Joueur rouge</th>
+                <th>Gagnant</th>
+                <th>Sélectionner</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for game in games %}
+            <tr data-id="{{ loop.index0 }}">
+                <td>{{ game.id }}</td>
+                <td>{{ game.name }}</td>
+                <td>{{ game.date }}</td>
+                <td>{{ game.blue_player.name }}</td>
+                <td>{{ game.red_player.name }}</td>
+                <td>{{ game.winner }}</td>
+                <td><input type="checkbox" class="game-checkbox"></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Boîte de dialogue modale -->
+    <div id="saveModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Choisissez le format de fichier</h2>
+            <select id="file-format">
+                <option value="hsgf">HSGF</option>
+                <option value="json">JSON</option>
+                <option value="sqlite">SQLite</option>
+            </select>
+            <br><br>
+            <button onclick="saveSelectedGames()">Confirmer</button>
+        </div>
+    </div>
+</div>
+{% include 'partials/footer.html' %}
+
+    <script>
+        function selectFile(type) {
+            document.getElementById('file-input').click();
+
+            document.getElementById('file-input').onchange = function() {
+                var file = this.files[0];
+                if (file) {
+                    uploadFile(file, type);
+                }
+            };
+        }
+
+        function uploadFile(file, type) {
+            var formData = new FormData();
+            formData.append('file', file);
+            formData.append('type', type);
+
+            fetch('/games_list', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.error) {
+                    alert(result.error);
+                } else {
+                    alert(result.message);
+                    window.location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+            });
+        }
+
+        document.getElementById('games-table').addEventListener('click', async function(event) {
+            const target = event.target.closest('tr');
+            if (target && target.dataset.id && event.target.tagName !== 'INPUT') {
+                    const response = await fetch(`/api/game/load/${target.dataset.id}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    const data = await response.json();
+                    if (data.status === 'success') {
+                        window.location.href = '/game';
+                    }
+            }
+        });
+
+        function viewStatistics() {
+            const selectedIndexes = getSelectedIndexes();
+            if (selectedIndexes.length > 0) {
+                fetch('/statistiques', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ indexes: selectedIndexes })
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.error) {
+                        alert(result.error);
+                    } else {
+                        window.location.href = '/statistiques';
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                });
+            } else {
+                alert("Aucune partie sélectionnée.");
+            }
+        }
+
+        function deleteSelectedGames() {
+            const selectedIndexes = getSelectedIndexes();
+            if (selectedIndexes.length > 0) {
+                if (confirm("Voulez-vous vraiment supprimer les parties sélectionnées ?")) {
+                    fetch('/games_list', {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ indexes: selectedIndexes })
+                    })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.error) {
+                            alert(result.error);
+                        } else {
+                            alert(result.message);
+                            window.location.reload();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erreur:', error);
+                    });
+                }
+            } else {
+                alert("Aucune partie sélectionnée.");
+            }
+        }
+
+        function showModal() {
+            document.getElementById('saveModal').style.display = "block";
+        }
+
+        function saveSelectedGames() {
+            const selectedIndexes = getSelectedIndexes();
+            const selectedFormat = document.getElementById('file-format').value;
+            const fileName = `saved_games.${selectedFormat}`;
+
+            if (selectedIndexes.length > 0) {
+                fetch('/sauvegarder_parties', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ indexes: selectedIndexes, file_name: fileName })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.blob();
+                    }
+                    return response.json().then(json => { throw new Error(json.error); });
+                })
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.style.display = 'none';
+                    a.href = url;
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    closeModal();
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    alert(error.message);
+                });
+            } else {
+                alert("Aucune partie sélectionnée.");
+                closeModal();
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('saveModal').style.display = "none";
+        }
+
+        // Fermer la boîte de dialogue lorsque l'utilisateur clique sur le bouton de fermeture
+        document.getElementsByClassName('close')[0].onclick = function() {
+            closeModal();
+        }
+
+        // Fermer la boîte de dialogue lorsque l'utilisateur clique en dehors de la boîte de dialogue
+        window.onclick = function(event) {
+            const modal = document.getElementById('saveModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+
+        function getSelectedIndexes() {
+            const checkboxes = document.querySelectorAll('.game-checkbox:checked');
+            const indexes = [];
+            checkboxes.forEach(checkbox => {
+                const row = checkbox.closest('tr');
+                if (row && row.dataset.id) {
+                    indexes.push(parseInt(row.dataset.id, 10));
+                }
+            });
+            return indexes;
+        }
+    </script>
+</body>
+</html>

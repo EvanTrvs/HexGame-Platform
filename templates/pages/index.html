@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hex Game - Accueil</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .button-container {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .button-container a {
+            display: inline-block;
+            margin: 10px 0;
+            padding: 15px 25px;
+            font-size: 18px;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            background-color: #007BFF;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        .button-container a:hover {
+            background-color: #0056b3;
+        }
+        .header, .footer {
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+        }
+        .header {
+            border-bottom: 1px solid #ddd;
+        }
+        .footer {
+            border-top: 1px solid #ddd;
+            position: absolute;
+            bottom: 0;
+        }
+        .main-logo {
+            width: 150px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+{% include 'partials/header.html' %}
+
+    <div class="content">
+        <img src="{{ url_for('static', filename='visuals/icoHexGame.png') }}" alt="Hex Game Logo" class="main-logo">
+        <h1>Bienvenue sur le jeu de Hex</h1>
+        
+        <div class="button-container">
+            <a href="{{ url_for('game.game_page') }}" class="button">Nouvelle Partie</a>
+            <a href="{{ url_for('games_list.list_games') }}" class="button">Gestionnaire de Parties</a>
+            <button id="rules-button" class="button">Règles du jeu de Hex</button>
+        </div>
+
+        <div id="rules-modal" class="modal">
+            <div class="modal-content">
+                <h2>Règles du jeu de Hex</h2>
+                <div class="rules-content">
+                    <h3>Objectif</h3>
+                    <p>Relier vos deux côtés opposés du plateau avec vos pions.</p>
+                    
+                    <h3>Déroulement</h3>
+                    <ul>
+                        <li>Les joueurs jouent à tour de rôle</li>
+                        <li>Le joueur bleu doit relier le haut et le bas</li>
+                        <li>Le joueur rouge doit relier la gauche et la droite</li>
+                        <li>Une fois placé, un pion ne peut être déplacé</li>
+                    </ul>
+
+                    <h3>Victoire</h3>
+                    <p>Le premier joueur qui crée une chaîne ininterrompue de ses pions entre ses deux côtés gagne la partie.</p>
+                </div>
+                <button id="close-rules" class="button">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p class="mb-0">&copy; 2025 - Cours IFT785 - Approche orientée objet - Projet de fin de session</p>
+    </footer>
+
+    <script>
+        document.getElementById('rules-button').addEventListener('click', function() {
+            document.getElementById('rules-modal').style.display = 'block';
+        });
+
+        document.getElementById('close-rules').addEventListener('click', function() {
+            document.getElementById('rules-modal').style.display = 'none';
+        });
+
+        // Fermer la modal si on clique en dehors
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('rules-modal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

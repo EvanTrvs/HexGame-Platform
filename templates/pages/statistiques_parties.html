@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistiques des Parties</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+    </style>
+</head>
+<body>
+<div class="content">
+{% include 'partials/header.html' %}
+    <h1>Statistiques des Parties Sélectionnées</h1>
+    <ul>
+        <li>Nombre de parties gagnées par le joueur bleu: {{stats["win_blue"]}}</li>
+        <li>Nombre de parties gagnées par le joueur rouge: {{stats["win_red"]}}</li>
+        <li>Nombre moyen de coups joués: {{stats["average_number_moves"]}}</li>
+    </ul>
+</div>
+{% include 'partials/footer.html' %}
+</body>
+</html>
