@@ -1,0 +1,11 @@
+# TODO - HexGame-Platform
+
+- Implement simple heuristic-based game bots
+- Work on labeling and creating large Hex game datasets
+- Implement training pipeline for AI models (reinforcement learning, supervised, etc.)
+- Develop an advanced game configurator (board size, timer, player types, etc.)
+- Improve the user interface and UX
+- Add support for more game save formats (e.g., XML, SQLite)
+- Increase test coverage and add more integration/end-to-end tests
+- Add visualization tools for game analysis
+- Optimize performance for large datasets and AI training 
